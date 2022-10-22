@@ -28,5 +28,5 @@ func (v *Version) ServerHTTP(ctx *handler.Context) {
 }
 
 func (v *Version) Next() handler.Handler {
-	return v.Next()
+	return v.NextHandler
 }

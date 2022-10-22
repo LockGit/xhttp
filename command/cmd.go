@@ -4,7 +4,6 @@ import (
 	"xhttp/handler"
 )
 
-type Cmd handler.Handler
 type Setup func(cmd handler.Handler) (h handler.Handler, err error)
 
 var Cmds map[string]Setup
