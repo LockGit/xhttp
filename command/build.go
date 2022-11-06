@@ -17,7 +17,7 @@ var CmdList = []string{
 }
 
 func buildCmd() (h handler.Handler, e error) {
-	exec := handler.Handler(handler.HandlerFunc(func(ctx *handler.Context) {}))
+	exec := handler.Handler(handler.HandleFunc(func(ctx *handler.Context) {}))
 	for i := len(CmdList) - 1; i >= 0; i-- {
 		name := CmdList[i]
 		if setup := Get(name); setup != nil {
@@ -32,13 +32,16 @@ func buildCmd() (h handler.Handler, e error) {
 	return exec, nil
 }
 
-func GetCmdExecutor() handler.Handler {
+func Build() (err error) {
 	once.Do(func() {
-		bc, err := buildCmd()
+		cmdExecutor, err = buildCmd()
 		if err != nil {
-			panic("init() buildCmd err:" + err.Error())
+			return
 		}
-		cmdExecutor = bc
 	})
+	return
+}
+
+func GetCmdExecutor() handler.Handler {
 	return cmdExecutor
 }

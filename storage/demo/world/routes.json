@@ -1,0 +1,72 @@
+[
+  {
+    "url": "/test",
+    "method": "post",
+    "execType": "parallel",
+    "children": [
+      {
+        "name": "aaa",
+        "url": "/aaa",
+        "method": "post",
+        "params": [
+          {
+            "name": "xx",
+            "source": "$.body",
+            "default_value": "ddd",
+            "required": true
+          }
+        ],
+        "timeout": 3
+      },
+      {
+        "name": "bbb",
+        "url": "/bbb",
+        "method": "post",
+        "params": [
+          {
+            "name": "xx",
+            "source": "$.body",
+            "default_value": "ddd",
+            "required": true
+          }
+        ],
+        "timeout": 3
+      }
+    ]
+  },
+  {
+    "url": "/demo",
+    "method": "post",
+    "execType": "serial",
+    "children": [
+      {
+        "name": "aaa",
+        "url": "/aaa",
+        "method": "post",
+        "params": [
+          {
+            "name": "xx",
+            "source": "$.body",
+            "default_value": "ddd",
+            "required": true
+          }
+        ],
+        "timeout": 3
+      },
+      {
+        "name": "bbb",
+        "url": "/bbb",
+        "method": "post",
+        "params": [
+          {
+            "name": "xx",
+            "source": "$.body",
+            "default_value": "ddd",
+            "required": true
+          }
+        ],
+        "timeout": 3
+      }
+    ]
+  }
+]

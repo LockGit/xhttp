@@ -1,0 +1,96 @@
+[
+  {
+    "url": "/test",
+    "method": "post",
+    "execType": "parallel",
+    "children": [
+      {
+        "name": "aaa",
+        "url": "https://www.baidu.com/sugrec",
+        "method": "get",
+        "params": [
+          {
+            "name": "prod",
+            "source": "$.query",
+            "default_value": "pc_his",
+            "required": true
+          },
+          {
+            "name": "from",
+            "source": "$.query",
+            "default_value": "pc",
+            "required": true
+          },
+          {
+            "name": "json",
+            "source": "$.query",
+            "default_value": "1",
+            "required": true
+          }
+        ],
+        "timeout": 3
+      },
+      {
+        "name": "bbb",
+        "url": "https://www.baidu.com/sugrec",
+        "method": "get",
+        "params": [
+          {
+            "name": "prod",
+            "source": "$.query",
+            "default_value": "pc_his",
+            "required": true
+          },
+          {
+            "name": "from",
+            "source": "$.query",
+            "default_value": "pc",
+            "required": true
+          },
+          {
+            "name": "json",
+            "source": "$.query",
+            "default_value": "1",
+            "required": true
+          }
+        ],
+        "timeout": 3
+      }
+    ]
+  },
+  {
+    "url": "/demo",
+    "method": "post",
+    "execType": "serial",
+    "children": [
+      {
+        "name": "aaa",
+        "url": "/aaa",
+        "method": "post",
+        "params": [
+          {
+            "name": "xx",
+            "source": "$.body",
+            "default_value": "ddd",
+            "required": true
+          }
+        ],
+        "timeout": 3
+      },
+      {
+        "name": "bbb",
+        "url": "/bbb",
+        "method": "post",
+        "params": [
+          {
+            "name": "xx",
+            "source": "$.body",
+            "default_value": "ddd",
+            "required": true
+          }
+        ],
+        "timeout": 3
+      }
+    ]
+  }
+]

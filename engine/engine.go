@@ -6,26 +6,88 @@ import (
 	"sync"
 	"xhttp/handler"
 	"xhttp/router"
+	"xhttp/storage"
 )
 
 type Engine struct {
-	*router.Project
+	store        *storage.Storage
+	Projects     *router.Projects
 	once         sync.Once
 	HookFuncList []func() error
+	lock         sync.Mutex
 }
 
-func NewEngine() *Engine {
-	return &Engine{
-		Project: &router.Project{},
+type Option func(engine *Engine)
+
+func WithStorage(store *storage.Storage) Option {
+	return func(engine *Engine) {
+		engine.store = store
 	}
+}
+
+func NewEngine(options ...Option) *Engine {
+	engine := &Engine{
+		Projects: nil,
+	}
+	for _, op := range options {
+		op(engine)
+	}
+	return engine
+}
+
+func (e *Engine) updateProject(p *storage.Project) {
+	e.lock.Lock()
+	defer e.lock.Unlock()
+	r := &router.Route{
+		Project: p,
+	}
+	e.Projects.ProjectsMap[p.Name] = r
+}
+
+func (e *Engine) removeProject(p *storage.Project) {
+	e.lock.Lock()
+	defer e.lock.Unlock()
+	delete(e.Projects.ProjectsMap, p.Name)
 }
 
 func (e *Engine) InitProject() {
-	projects := make(map[string]*router.Route)
-	projects[""] = &router.Route{
-		ProjectName: "hello",
+	projects, err := e.store.GetAll()
+	if err != nil {
+		log.Fatalf("Engine.InitProject() fatal,err:%s", err.Error())
 	}
-	e.Projects = projects
+	ps := &router.Projects{
+		ProjectsMap: make(map[string]*router.Route),
+	}
+	for _, p := range projects {
+		if _, ok := ps.ProjectsMap[p.Name]; !ok {
+			log.Println("add project: " + p.Name)
+			r := &router.Route{
+				Project: p,
+			}
+			ps.ProjectsMap[p.Name] = r
+		}
+	}
+	e.Projects = ps
+
+	go func() {
+		if err = e.store.Watch(); err != nil {
+			log.Fatalf("e.store.Watch() err:" + err.Error())
+		}
+	}()
+
+	go func() {
+		for ch := range e.store.WatchEvent() {
+			log.Println("ch update", ch)
+			switch ch.Op {
+			case storage.OpMod, storage.OpAdd:
+				log.Println("update project:", ch)
+				e.updateProject(ch.Project)
+			case storage.OpDel:
+				log.Println("del project:", ch)
+				e.removeProject(ch.Project)
+			}
+		}
+	}()
 }
 
 func (e *Engine) RegisterHook(hook ...func() error) {
@@ -45,20 +107,20 @@ func (e *Engine) RunHook() {
 func (e *Engine) ServeHTTP(response http.ResponseWriter, request *http.Request) {
 	e.once.Do(func() {
 		e.RunHook()
-		e.InitProject()
 	})
 	ctx := &handler.Context{
 		Request:  request,
 		Response: response,
 	}
-	node := e.Project.Match(ctx)
-	if node != nil {
-		node.ServerHTTP(ctx)
+	route, api := e.Projects.Match(ctx)
+	ctx.API = api
+	if route == nil {
+		response.WriteHeader(http.StatusNotFound)
+		_, err := response.Write([]byte("404 not found"))
+		if err != nil {
+			log.Println("response.Write err:", err.Error())
+		}
 		return
 	}
-	response.WriteHeader(http.StatusNotFound)
-	_, err := response.Write([]byte("404 not found"))
-	if err != nil {
-		log.Println("response.Write err:", err.Error())
-	}
+	route.ServerHTTP(ctx)
 }

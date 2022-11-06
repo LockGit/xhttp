@@ -3,10 +3,11 @@ package router
 import (
 	"xhttp/command"
 	"xhttp/handler"
+	"xhttp/storage"
 )
 
 type Route struct {
-	ProjectName string
+	*storage.Project
 }
 
 func (r *Route) ServerHTTP(ctx *handler.Context) {

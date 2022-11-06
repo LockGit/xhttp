@@ -21,8 +21,8 @@ type Version struct {
 }
 
 func (v *Version) ServerHTTP(ctx *handler.Context) {
-	if v.NextHandler != nil {
-		defer v.NextHandler.ServerHTTP(ctx)
+	if v.Next() != nil {
+		defer v.Next().ServerHTTP(ctx)
 	}
 	ctx.Response.Header().Add("X-Version", "1.0.0")
 }

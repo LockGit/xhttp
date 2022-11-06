@@ -1,9 +1,9 @@
 package combine
 
 import (
-	"log"
 	"net/http"
 	"xhttp/command"
+	"xhttp/command/combine/process"
 	"xhttp/handler"
 )
 
@@ -23,12 +23,16 @@ type Combine struct {
 }
 
 func (c *Combine) ServerHTTP(ctx *handler.Context) {
-	if c.NextHandler != nil {
-		defer c.NextHandler.ServerHTTP(ctx)
+	if c.Next() != nil {
+		defer c.Next().ServerHTTP(ctx)
 	}
-	log.Println("Combine:", ctx.Request.RequestURI)
-	ctx.Response.WriteHeader(http.StatusOK)
-	ctx.Response.Write([]byte("ok:" + ctx.Request.RequestURI))
+	p, ok := process.DefaultProcess[ctx.API.ExecType]
+	if !ok {
+		ctx.Response.WriteHeader(http.StatusInternalServerError)
+		ctx.Response.Write([]byte("no support exec method"))
+		return
+	}
+	p.Exec(ctx)
 }
 
 func (c *Combine) Next() handler.Handler {

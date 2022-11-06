@@ -5,12 +5,12 @@ type Handler interface {
 	Next() Handler
 }
 
-type HandlerFunc func(ctx *Context)
+type HandleFunc func(ctx *Context)
 
-func (f HandlerFunc) ServerHTTP(ctx *Context) {
+func (f HandleFunc) ServerHTTP(ctx *Context) {
 	f(ctx)
 }
 
-func (f HandlerFunc) Next() Handler {
+func (f HandleFunc) Next() Handler {
 	return nil
 }
