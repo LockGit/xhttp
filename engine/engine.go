@@ -38,9 +38,8 @@ func NewEngine(options ...Option) *Engine {
 func (e *Engine) updateProject(p *storage.Project) {
 	e.lock.Lock()
 	defer e.lock.Unlock()
-	r := &router.Route{
-		Project: p,
-	}
+	r := router.NewRoute(p)
+	r.BuildTire(p.APIs)
 	e.Projects.ProjectsMap[p.Name] = r
 }
 
@@ -61,9 +60,8 @@ func (e *Engine) InitProject() {
 	for _, p := range projects {
 		if _, ok := ps.ProjectsMap[p.Name]; !ok {
 			log.Println("add project: " + p.Name)
-			r := &router.Route{
-				Project: p,
-			}
+			r := router.NewRoute(p)
+			r.BuildTire(p.APIs)
 			ps.ProjectsMap[p.Name] = r
 		}
 	}
@@ -109,12 +107,14 @@ func (e *Engine) ServeHTTP(response http.ResponseWriter, request *http.Request) 
 		e.RunHook()
 	})
 	ctx := &handler.Context{
-		Request:  request,
-		Response: response,
+		Request:          request,
+		Response:         response,
+		MatchRouteParams: make(map[string]string),
 	}
-	route, api := e.Projects.Match(ctx)
+	route, api, params := e.Projects.Match(ctx)
 	ctx.API = api
-	if route == nil {
+	ctx.MatchRouteParams = params
+	if route == nil || ctx.API == nil {
 		response.WriteHeader(http.StatusNotFound)
 		_, err := response.Write([]byte("404 not found"))
 		if err != nil {

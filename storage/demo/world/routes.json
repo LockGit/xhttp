@@ -6,13 +6,25 @@
     "children": [
       {
         "name": "aaa",
-        "url": "/aaa",
-        "method": "post",
+        "url": "https://www.baidu.com/sugrec",
+        "method": "get",
         "params": [
           {
-            "name": "xx",
-            "source": "$.body",
-            "default_value": "ddd",
+            "name": "prod",
+            "source": "$.query",
+            "default_value": "pc_his",
+            "required": true
+          },
+          {
+            "name": "from",
+            "source": "$.query",
+            "default_value": "pc",
+            "required": true
+          },
+          {
+            "name": "json",
+            "source": "$.query",
+            "default_value": "1",
             "required": true
           }
         ],
@@ -20,13 +32,25 @@
       },
       {
         "name": "bbb",
-        "url": "/bbb",
-        "method": "post",
+        "url": "https://www.baidu.com/sugrec",
+        "method": "get",
         "params": [
           {
-            "name": "xx",
-            "source": "$.body",
-            "default_value": "ddd",
+            "name": "prod",
+            "source": "$.query",
+            "default_value": "pc_his",
+            "required": true
+          },
+          {
+            "name": "from",
+            "source": "$.query",
+            "default_value": "pc",
+            "required": true
+          },
+          {
+            "name": "json",
+            "source": "$.query",
+            "default_value": "1",
             "required": true
           }
         ],
@@ -36,18 +60,30 @@
   },
   {
     "url": "/demo",
-    "method": "post",
+    "method": "get",
     "execType": "serial",
     "children": [
       {
         "name": "aaa",
-        "url": "/aaa",
-        "method": "post",
+        "url": "https://www.baidu.com/sugrec",
+        "method": "get",
         "params": [
           {
-            "name": "xx",
+            "name": "prod",
+            "source": "$.query",
+            "default_value": "pc_his",
+            "required": true
+          },
+          {
+            "name": "from",
             "source": "$.body",
-            "default_value": "ddd",
+            "default_value": "pc",
+            "required": true
+          },
+          {
+            "name": "json",
+            "source": "$.header",
+            "default_value": "1",
             "required": true
           }
         ],
@@ -55,13 +91,25 @@
       },
       {
         "name": "bbb",
-        "url": "/bbb",
-        "method": "post",
+        "url": "https://www.baidu.com/sugrec",
+        "method": "get",
         "params": [
           {
-            "name": "xx",
-            "source": "$.body",
-            "default_value": "ddd",
+            "name": "prod",
+            "source": "$.cookie",
+            "default_value": "pc_his",
+            "required": true
+          },
+          {
+            "name": "from",
+            "source": "$.query",
+            "default_value": "pc",
+            "required": true
+          },
+          {
+            "name": "json",
+            "source": "$.query",
+            "default_value": "1",
             "required": true
           }
         ],

@@ -6,9 +6,10 @@ import (
 )
 
 type Context struct {
-	Request  *http.Request
-	Response http.ResponseWriter
-	API      *storage.API
+	Request          *http.Request
+	Response         http.ResponseWriter
+	API              *storage.API
+	MatchRouteParams map[string]string
 }
 
 func (c *Context) GetCurAPI() *storage.API {
