@@ -10,7 +10,7 @@ storage/demo下的文件夹表示项目名，每个项目下的routes.json为要
 
 | 字段                                  | 类型     | 说明                                               |
 |-------------------------------------|--------|--------------------------------------------------|
-| url                                 | string | 当前项目待匹配的url,指定值或/path/:id占位符或/path/some*通配符形式均可  |
+| url                                 | string | 匹配url,指定值或/path/:id占位符或/path/some*通配符形式均可        |
 | method                              | string | 当前项目url所支持的http请求                                |
 | execType                            | string | parallel=并行，serial=串行                            |
 | children                            | array  | 待编排的子api                                         |
