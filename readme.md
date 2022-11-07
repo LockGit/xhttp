@@ -50,7 +50,7 @@ X-Project的值即为项目名,上面curl请求表示当前请求发到那个hel
   * from(从header中取值)
   * name(从body中取值)
   * age(从cookie中取值)
-  * other(从$.aaa【前一个name=aaa的api结果中取值】)
+  * other(从$.aaa【前一个name=aaa的api结果中取值】,仅在串行聚合中生效)
 
 ```json
 {
