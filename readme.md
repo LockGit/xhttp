@@ -132,3 +132,4 @@ curl -XPOST  http://127.0.0.1:8888/demo -H 'X-Project:hello'
 
 ### 注意
 * children[x].url 的配置应该是确定的，否则可能会触发ssrf
+* 用go写的速成的项目，用于测试目的， xhttp 还未经过大量的验证和实践
