@@ -45,11 +45,12 @@ X-Project的值即为项目名,上面curl请求表示当前请求发到那个hel
 服务接收到请求后，会匹配/test路由，/test下有2个子路由：
 * 表示对children中的两个url（name=aaa,name=bbb）进行parallel(并行)聚合操作。
 * 以children解释说明： 两个children中的url都配置了: https://www.baidu.com/sugrec 
-* 第一个children的get请求的参数有如下：
+* 第2个children的get请求的参数有如下：
   * prod(从query中取值)
   * from(从header中取值)
   * name(从body中取值)
   * age(从cookie中取值)
+  * other(从$.aaa【前一个name=aaa的api结果中取值】)
 
 ```json
 {
@@ -107,9 +108,21 @@ X-Project的值即为项目名,上面curl请求表示当前请求发到那个hel
           "required": true
         },
         {
-          "name": "json",
+          "name": "name",
           "source": "$.query",
           "default_value": "1",
+          "required": true
+        },
+        {
+          "name": "age",
+          "source": "$.cookie",
+          "default_value": "1",
+          "required": true
+        },
+        {
+          "name": "other",
+          "source": "$.aaa",
+          "default_value": "test",
           "required": true
         }
       ],
