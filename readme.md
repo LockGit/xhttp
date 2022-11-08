@@ -1,8 +1,13 @@
-## xhttp
+[## xhttp
 
 ### what is xhttp ?
 
-xhttp ---> 将一个或者多个http api进行并行或串行编排后并将结果返回
+xhttp ---> 将一个或者多个 http api 按照自定义的编排配置方式，进行并行或串行聚合后并将结果返回
+
+场景：
+* 将后端的多个API聚合处理，只暴漏一个API给到前端
+* 自动化测试验证
+* ....
 
 ### 配置定义
 
@@ -25,12 +30,13 @@ storage/demo下的文件夹表示项目名，每个项目下的routes.json为要
 
 其中取值来源children[x].params[x].source 支持有以下：
 
-| 字段       | 类型     | 说明                |
-|----------|--------|-------------------|
-| $.query  | string | 从http query中获取参数  |
-| $.body   | string | 从http query中获取参数  |
-| $.header | string | 从http header中获取参数 |
-| $.cookie | string | 从http cookie中获取参数 |
+| 字段         | 类型     | 说明                                  |
+|------------|--------|-------------------------------------|
+| $.query    | string | 从http query中获取参数                    |
+| $.body     | string | 从http body中获取参数                     |
+| $.header   | string | 从http header中获取参数                   |
+| $.cookie   | string | 从http cookie中获取参数                   |
+| $.someName | string | 从name=someName api结果中获取参数(仅并行聚合时生效) |
 
 ### demo
 
@@ -147,4 +153,4 @@ curl -XPOST  http://127.0.0.1:8888/demo -H 'X-Project:hello'
 ### 注意
 
 * children[x].url 的配置应该是确定的，否则可能会触发ssrf
-* 用go写的速成的项目，用于测试目的， xhttp 还未经过大量的验证和实践
+* 用go写的速成项目，验证猜想， xhttp 还未经过大量的验证和实践
